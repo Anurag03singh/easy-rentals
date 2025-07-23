@@ -5,9 +5,14 @@ const port = process.env.PORT || 4000;
 
 const io = new Server({
   cors: {
-    origin: [clientUrl, "https://easy-rentals.vercel.app"],
-    methods: ["GET", "POST"],
-    credentials: true
+    origin: [
+      clientUrl, 
+      "https://easy-rentals.vercel.app", 
+      "https://easy-rentals-client.vercel.app"
+    ],
+    methods: ["GET", "POST", "OPTIONS"],
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"]
   },
 });
 

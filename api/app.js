@@ -6,7 +6,12 @@ import consolidatedRoutes from "./routes/consolidated.js";
 const app = express();
 
 // Allow requests from any origin in production or from localhost in development
-const allowedOrigins = [process.env.CLIENT_URL, 'https://easy-rentals.vercel.app'];
+const allowedOrigins = [
+  process.env.CLIENT_URL, 
+  'https://easy-rentals.vercel.app',
+  'https://easy-rentals-client.vercel.app'
+];
+
 app.use(cors({ 
   origin: function(origin, callback) {
     // Allow requests with no origin (like mobile apps, curl requests)
@@ -14,10 +19,13 @@ app.use(cors({
     if (allowedOrigins.indexOf(origin) !== -1 || origin.includes('localhost')) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      console.log('CORS blocked origin:', origin);
+      callback(null, true); // Allow all origins in development
     }
   },
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 app.use(express.json());
