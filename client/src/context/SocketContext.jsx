@@ -10,16 +10,24 @@ export const SocketContextProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    // In production, use the socketPath parameter
-    const socketOptions = import.meta.env.MODE === 'production' 
-      ? { path: config.socketPath } 
-      : {};
+    // Connect to the socket server
+    const newSocket = io(config.socketUrl, {
+      withCredentials: true,
+      transports: ['websocket', 'polling']
+    });
     
-    setSocket(io(config.socketUrl, socketOptions));
+    setSocket(newSocket);
+    
+    // Cleanup on unmount
+    return () => {
+      newSocket.disconnect();
+    };
   }, []);
 
   useEffect(() => {
-    currentUser && socket?.emit("newUser", currentUser.id);
+    if (currentUser && socket) {
+      socket.emit("newUser", currentUser.id);
+    }
   }, [currentUser, socket]);
 
   return (

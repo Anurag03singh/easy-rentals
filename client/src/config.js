@@ -7,10 +7,9 @@ const config = {
   },
   // Production environment
   production: {
-    // For Vercel deployment, API and socket are on the same domain
-    apiUrl: "/api",
-    socketUrl: window.location.origin,
-    socketPath: "/api/socketio"
+    // Use environment variables if available, otherwise fallback to default URLs
+    apiUrl: import.meta.env.VITE_API_URL || "https://easy-rentals-api.onrender.com/api",
+    socketUrl: import.meta.env.VITE_SOCKET_URL || "https://easy-rentals-socket.onrender.com"
   }
 };
 
