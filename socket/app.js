@@ -1,8 +1,13 @@
 import { Server } from "socket.io";
 
+const clientUrl = process.env.CLIENT_URL || "http://localhost:5173";
+const port = process.env.PORT || 4000;
+
 const io = new Server({
   cors: {
-    origin: "http://localhost:5173",
+    origin: [clientUrl, "https://easy-rentals.vercel.app"],
+    methods: ["GET", "POST"],
+    credentials: true
   },
 });
 
@@ -38,4 +43,5 @@ io.on("connection", (socket) => {
   });
 });
 
-io.listen("4000");
+io.listen(port);
+console.log(`Socket server running on port ${port}`);

@@ -10,7 +10,12 @@ export const SocketContextProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    setSocket(io(config.socketUrl));
+    // In production, use the socketPath parameter
+    const socketOptions = import.meta.env.MODE === 'production' 
+      ? { path: config.socketPath } 
+      : {};
+    
+    setSocket(io(config.socketUrl, socketOptions));
   }, []);
 
   useEffect(() => {
