@@ -1,0 +1,56 @@
+services:
+  # API Service
+  - type: web
+    name: easy-rentals-api
+    env: node
+    buildCommand: cd api && npm install
+    startCommand: cd api && node app.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CLIENT_URL
+        fromService:
+          name: easy-rentals-client
+          type: web
+          property: url
+
+  # Socket Service
+  - type: web
+    name: easy-rentals-socket
+    env: node
+    buildCommand: cd socket && npm install
+    startCommand: cd socket && node app.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: CLIENT_URL
+        fromService:
+          name: easy-rentals-client
+          type: web
+          property: url
+
+  # Client Service
+  - type: web
+    name: easy-rentals-client
+    env: static
+    buildCommand: cd client && npm install && npm run build
+    staticPublishPath: client/dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          name: easy-rentals-api
+          type: web
+          property: url
+      - key: VITE_SOCKET_URL
+        fromService:
+          name: easy-rentals-socket
+          type: web
+          property: url

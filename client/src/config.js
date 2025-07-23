@@ -7,8 +7,13 @@ const config = {
   },
   // Production environment
   production: {
-    apiUrl: "https://easy-rentals-api.vercel.app/api", // Update this with your actual API URL once deployed
-    socketUrl: "https://easy-rentals-socket.vercel.app" // Update this with your actual Socket URL once deployed
+    // Use environment variables if available, otherwise fallback to default URLs
+    apiUrl: import.meta.env.VITE_API_URL 
+      ? `${import.meta.env.VITE_API_URL}/api` 
+      : "https://easy-rentals-api.onrender.com/api",
+    socketUrl: import.meta.env.VITE_SOCKET_URL 
+      ? import.meta.env.VITE_SOCKET_URL 
+      : "https://easy-rentals-socket.onrender.com"
   }
 };
 
